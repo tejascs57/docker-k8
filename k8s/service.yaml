@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: tejas-service
+
+spec:
+  type: NodePort
+
+  selector:
+    app: tejas-app
+
+  ports:
+    - port: 80
+      targetPort: 5000
+      nodePort: 30080
+
+# Why this Service is useful
+#
+# The Deployment runs the application in 3 Pods. Each Pod has its own IP
+# address, which can change when Kubernetes replaces it.
+# A Service provides a stable endpoint and routes traffic to matching, ready
+# Pods, so clients do not need to track individual Pod IP addresses.
+#
+# How this Service works
+#
+# selector (app: tejas-app): Finds Pods with the label set by the Deployment.
+# port (80): The Service's port inside the cluster.
+# targetPort (5000): The port where the application listens in each Pod.
+# type (NodePort): Exposes the Service on port 30080 on the cluster nodes. Host Port
+#
+# Traffic flow:
+# Browser -> <node-IP>:30080 -> Service:80 -> one of the ready Pods:5000
+#
+# Depending on the local Kubernetes setup, http://localhost:30080 may work.
+# Otherwise, use http://<node-IP>:30080.
+#
+# A Service is not mandatory for the Deployment to run, but it is the usual
+# way to give its Pods stable network access.

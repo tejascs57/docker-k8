@@ -1,0 +1,19 @@
+name: devops-docker
+
+services:
+   web:                         # service name (you choose it)
+    build: .                   # build the image from the Dockerfile in this folder
+    image: hello-python        # name given to the built image
+    container_name: hello-compose
+    ports:
+      - "8001:5000"            # PC port 8001 -> container port 5000
+    restart: unless-stopped    # restart automatically unless you stop it
+
+  
+   nginx:                       # second container: a ready-made image, nothing to build
+    image: nginx:alpine        # downloaded from Docker Hub
+    container_name: hello-nginx
+    ports:
+      - "8002:80"              # PC port 8002 -> nginx's port 80
+    depends_on:
+      - web                    # start web first

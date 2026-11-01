@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: tejas-deployment
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: tejas-app
+
+  template:
+    metadata:
+      labels:
+        app: tejas-app
+
+    spec:
+      containers:
+        - name: tejas-container
+          image: tejas-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+
+
+
+# Why this Deployment is useful
+#
+# A Deployment manages the application's Pods and keeps the desired number
+# running. If a Pod fails or is deleted, Kubernetes creates a replacement.
+# It also manages rolling updates when the Pod template changes, such as
+# when a new container image is specified.
+#
+# How this Deployment works
+#
+# apiVersion (apps/v1): The stable Kubernetes API version for Deployments.
+# kind (Deployment): Identifies the type of Kubernetes resource.
+# metadata.name (tejas-deployment): The name of this Deployment.
+# replicas (3): The desired number of Pods.
+# selector.matchLabels (app: tejas-app): Identifies the Pods it manages.
+# template: Defines how each Pod is created.
+# template.metadata.labels: Must match the Deployment's selector; the Service
+# also uses the app: tejas-app label to find these Pods.
+# containers.name (tejas-container): The container's name inside each Pod.
+# image (tejas-image:v10): The container image and tag to run.
+# imagePullPolicy (IfNotPresent): Uses the image if it exists on the node;
+# otherwise, Kubernetes attempts to pull it from a registry. A locally built
+# image must be made available to each node where these Pods may run.
+# containerPort (5000): Documents the application's listening port. It does
+# not make the application listen on that port or expose it outside the Pod.
+#
+# Relationship with the Service
+#
+# The Deployment manages Pods; the Service provides a stable network endpoint
+# and routes traffic to matching, ready Pods on application port 5000.
